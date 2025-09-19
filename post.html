@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Post - Lost & Found</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        color: #333;
+        padding: 2rem 1rem;
+      }
+
+      /* Header Section */
+      .header {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+
+      .logo {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+      }
+
+      .header-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .header-subtitle {
+        font-size: 1.1rem;
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 400;
+      }
+
+      /* Main Container */
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .form-container {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        padding: 3rem;
+        border-radius: 25px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      /* Messages */
+      .message {
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        font-weight: 500;
+        display: none;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .error-message {
+        background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+        color: #dc2626;
+        border-left: 4px solid #dc2626;
+      }
+
+      .success-message {
+        background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+        color: #16a34a;
+        border-left: 4px solid #16a34a;
+      }
+
+      /* Form Sections */
+      .form-section {
+        margin-bottom: 2.5rem;
+        padding: 2rem;
+        background: #f8fafc;
+        border-radius: 15px;
+        border: 1px solid #e2e8f0;
+      }
+
+      .section-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #1e3c72;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .section-icon {
+        font-size: 1.5rem;
+      }
+
+      /* Form Groups */
+      .form-group {
+        margin-bottom: 2rem;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.75rem;
+        color: #374151;
+        font-weight: 600;
+        font-size: 1rem;
+      }
+
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        width: 100%;
+        padding: 1rem 1.25rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: white;
+        font-family: inherit;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus,
+      .form-group textarea:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        transform: translateY(-1px);
+      }
+
+      .form-group textarea {
+        resize: vertical;
+        min-height: 120px;
+      }
+
+      /* File Upload */
+      .file-upload-area {
+        border: 2px dashed #cbd5e1;
+        border-radius: 12px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        background: white;
+        cursor: pointer;
+        position: relative;
+      }
+
+      .file-upload-area:hover {
+        border-color: #667eea;
+        background: #f8fafc;
+      }
+
+      .file-upload-area.dragover {
+        border-color: #667eea;
+        background: #f0f4ff;
+      }
+
+      .upload-icon {
+        font-size: 3rem;
+        color: #94a3b8;
+        margin-bottom: 1rem;
+      }
+
+      .upload-text {
+        color: #64748b;
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .upload-subtext {
+        color: #94a3b8;
+        font-size: 0.9rem;
+      }
+
+      #image {
+        position: absolute;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+      }
+
+      /* Image Preview */
+      .image-preview {
+        margin-top: 1.5rem;
+        text-align: center;
+        display: none;
+      }
+
+      .preview-image {
+        max-width: 100%;
+        max-height: 300px;
+        border-radius: 12px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      }
+
+      /* Location Section */
+      .location-input-group {
+        display: flex;
+        gap: 1rem;
+        align-items: end;
+      }
+
+      .location-input {
+        flex: 1;
+      }
+
+      /* Buttons */
+      .btn {
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        text-decoration: none;
+        min-width: 140px;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+      }
+
+      .btn-secondary {
+        background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+        color: #475569;
+        border: 1px solid #cbd5e1;
+      }
+
+      .btn-secondary:hover {
+        background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+        transform: translateY(-1px);
+      }
+
+      .btn-success {
+        background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+        color: white;
+      }
+
+      .btn-success:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(22, 163, 74, 0.3);
+      }
+
+      .btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none !important;
+      }
+
+      /* Type Selection */
+      .type-selection {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+
+      .type-option {
+        position: relative;
+      }
+
+      .type-option input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+      }
+
+      .type-label {
+        display: block;
+        padding: 1.5rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: white;
+      }
+
+      .type-option input[type="radio"]:checked + .type-label {
+        border-color: #667eea;
+        background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 100%);
+        color: #1e3c72;
+      }
+
+      .type-icon {
+        font-size: 2rem;
+        display: block;
+        margin-bottom: 0.5rem;
+      }
+
+      .type-name {
+        font-weight: 600;
+        font-size: 1.1rem;
+      }
+
+      /* Action Buttons */
+      .action-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 3rem;
+        flex-wrap: wrap;
+      }
+
+      /* Status Messages */
+      .status-message {
+        padding: 1rem;
+        border-radius: 8px;
+        margin-top: 1rem;
+        font-weight: 500;
+        text-align: center;
+      }
+
+      .status-success {
+        background: #d1fae5;
+        color: #065f46;
+        border: 1px solid #a7f3d0;
+      }
+
+      .status-error {
+        background: #fee2e2;
+        color: #991b1b;
+        border: 1px solid #fca5a5;
+      }
+
+      /* Navigation */
+      .nav-link {
+        position: absolute;
+        top: 2rem;
+        left: 2rem;
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.25rem;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border-radius: 25px;
+        transition: all 0.3s ease;
+      }
+
+      .nav-link:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        body {
+          padding: 1rem 0.5rem;
+        }
+
+        .form-container {
+          padding: 2rem 1.5rem;
+        }
+
+        .header-title {
+          font-size: 2rem;
+        }
+
+        .type-selection {
+          grid-template-columns: 1fr;
+        }
+
+        .location-input-group {
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .action-buttons {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .btn {
+          width: 100%;
+          max-width: 300px;
+        }
+
+        .nav-link {
+          position: static;
+          margin-bottom: 2rem;
+          align-self: flex-start;
+        }
+      }
+
+      /* Loading Animation */
+      .loading {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 1s ease-in-out infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <a href="post_view.php" class="nav-link"> ← Back to Posts </a>
+
+    <div class="container">
+      <!-- Header -->
+      <div class="header">
+        <div class="logo">📝</div>
+        <h1 class="header-title">Create New Post</h1>
+        <p class="header-subtitle">
+          Help someone find their lost item or report something you found
+        </p>
+      </div>
+
+      <!-- Form Container -->
+      <div class="form-container">
+        <!-- Messages -->
+        <div id="message" class="message"></div>
+
+        <form id="uploadForm" method="post" enctype="multipart/form-data">
+          <!-- Post Type Section -->
+          <div class="form-section">
+            <h2 class="section-title">
+              <span class="section-icon">🏷️</span>
+              Post Type
+            </h2>
+            <div class="type-selection">
+              <div class="type-option">
+                <input
+                  type="radio"
+                  id="lost"
+                  name="type"
+                  value="lost"
+                  checked
+                />
+                <label for="lost" class="type-label">
+                  <span class="type-icon">😢</span>
+                  <span class="type-name">Lost</span>
+                </label>
+              </div>
+              <div class="type-option">
+                <input type="radio" id="found" name="type" value="found" />
+                <label for="found" class="type-label">
+                  <span class="type-icon">😊</span>
+                  <span class="type-name">Found</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Description Section -->
+          <div class="form-section">
+            <h2 class="section-title">
+              <span class="section-icon">📝</span>
+              Description
+            </h2>
+            <div class="form-group">
+              <label for="title">Title</label>
+              <input
+                type="text"
+                id="title"
+                name="title"
+                placeholder="Brief title for your post (e.g., 'Lost iPhone 13', 'Found wallet')"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="description">Describe the item</label>
+              <textarea
+                id="description"
+                name="description"
+                placeholder="Provide a detailed description of the item (color, size, brand, distinctive features, etc.)"
+                required
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- Image Section -->
+          <div class="form-section">
+            <h2 class="section-title">
+              <span class="section-icon">📷</span>
+              Photo
+            </h2>
+            <div class="form-group">
+              <div class="file-upload-area" id="fileUploadArea">
+                <input
+                  type="file"
+                  id="image"
+                  name="image"
+                  accept="image/*"
+                  required
+                />
+                <div class="upload-icon">📸</div>
+                <div class="upload-text">Click to upload or drag and drop</div>
+                <div class="upload-subtext">PNG, JPG, GIF up to 10MB</div>
+              </div>
+              <div class="image-preview" id="imagePreview">
+                <img id="previewImg" class="preview-image" alt="Preview" />
+              </div>
+              <button
+                type="button"
+                id="upload-btn"
+                class="btn btn-secondary"
+                style="margin-top: 1rem; display: none"
+              >
+                <span id="upload-text">📤 Upload Image</span>
+              </button>
+              <div
+                id="statusMessage"
+                class="status-message"
+                style="display: none"
+              ></div>
+            </div>
+          </div>
+
+          <!-- Location Section -->
+          <div class="form-section">
+            <h2 class="section-title">
+              <span class="section-icon">📍</span>
+              Location
+            </h2>
+            <div class="form-group">
+              <label for="location">Where was it lost/found?</label>
+              <div class="location-input-group">
+                <div class="location-input">
+                  <input
+                    type="text"
+                    id="location"
+                    name="location"
+                    placeholder="Enter location or use GPS"
+                    required
+                  />
+                </div>
+                <button
+                  type="button"
+                  id="location-btn"
+                  class="btn btn-secondary"
+                >
+                  📍 Use GPS
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="action-buttons">
+            <button type="button" id="submit-btn" class="btn btn-success">
+              <span id="submit-text">✨ Create Post</span>
+            </button>
+            <a href="post_view.php" class="btn btn-secondary"> ❌ Cancel </a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      const form = document.getElementById("uploadForm");
+      const title = document.getElementById("title");
+      const description = document.getElementById("description");
+      const statusMessage = document.getElementById("statusMessage");
+      const uploadImage = document.getElementById("upload-btn");
+      const type = document.querySelector('input[name="type"]:checked');
+      const message = document.getElementById("message");
+      const fileUploadArea = document.getElementById("fileUploadArea");
+      const imageInput = document.getElementById("image");
+      const imagePreview = document.getElementById("imagePreview");
+      const previewImg = document.getElementById("previewImg");
+      const locationInput = document.getElementById("location");
+      const submitBtn = document.getElementById("submit-btn");
+      const submitText = document.getElementById("submit-text");
+      const uploadText = document.getElementById("upload-text");
+
+      let lng = 0;
+      let lat = 0;
+      let imageUrl = "";
+
+      // Show message function
+      function showMessage(text, isError = false) {
+        message.className = `message ${
+          isError ? "error-message" : "success-message"
+        }`;
+        message.innerHTML = `${isError ? "⚠️" : "✅"} ${text}`;
+        message.style.display = "flex";
+
+        setTimeout(() => {
+          message.style.display = "none";
+        }, 5000);
+      }
+
+      // File upload handling
+      imageInput.addEventListener("change", function (e) {
+        const file = e.target.files[0];
+        if (file) {
+          // Show preview
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            previewImg.src = e.target.result;
+            imagePreview.style.display = "block";
+            uploadImage.style.display = "inline-flex";
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
+      // Drag and drop functionality
+      fileUploadArea.addEventListener("dragover", function (e) {
+        e.preventDefault();
+        fileUploadArea.classList.add("dragover");
+      });
+
+      fileUploadArea.addEventListener("dragleave", function (e) {
+        e.preventDefault();
+        fileUploadArea.classList.remove("dragover");
+      });
+
+      fileUploadArea.addEventListener("drop", function (e) {
+        e.preventDefault();
+        fileUploadArea.classList.remove("dragover");
+
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+          imageInput.files = files;
+          imageInput.dispatchEvent(new Event("change"));
+        }
+      });
+
+      // Image upload
+      uploadImage.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        const formData = new FormData();
+        const imageFile = imageInput.files[0];
+
+        if (!imageFile) {
+          showMessage("Please select an image first", true);
+          return;
+        }
+
+        formData.append("image", imageFile);
+
+        uploadText.innerHTML = '<span class="loading"></span> Uploading...';
+        uploadImage.disabled = true;
+
+        fetch("php_actions/upload.php", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((result) => {
+            uploadText.innerHTML = "📤 Upload Image";
+            uploadImage.disabled = false;
+
+            if (result.status === "success") {
+              imageUrl = result.url;
+              statusMessage.className = "status-message status-success";
+              statusMessage.textContent = "✅ Image uploaded successfully!";
+              statusMessage.style.display = "block";
+              uploadImage.style.display = "none";
+            } else {
+              statusMessage.className = "status-message status-error";
+              statusMessage.textContent = `❌ Error: ${result.message}`;
+              statusMessage.style.display = "block";
+            }
+          })
+          .catch((error) => {
+            uploadText.innerHTML = "📤 Upload Image";
+            uploadImage.disabled = false;
+            statusMessage.className = "status-message status-error";
+            statusMessage.textContent = `❌ Upload failed: ${error}`;
+            statusMessage.style.display = "block";
+          });
+      });
+
+      // Location handling
+      document.getElementById("location-btn").addEventListener("click", (e) => {
+        e.preventDefault();
+
+        if (!navigator.geolocation) {
+          showMessage("Geolocation is not supported by your browser", true);
+          return;
+        }
+
+        const locationBtn = e.target;
+        locationBtn.innerHTML =
+          '<span class="loading"></span> Getting location...';
+        locationBtn.disabled = true;
+
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            lat = position.coords.latitude;
+            lng = position.coords.longitude;
+
+            // Send coordinates to PHP backend
+            fetch("php_actions/location_receiver.php", {
+              method: "POST",
+              headers: { "Content-Type": "application/x-www-form-urlencoded" },
+              body: `lat=${lat}&lng=${lng}`,
+            })
+              .then((res) => res.json())
+              .then((data) => {
+                locationInput.value = data.address;
+                locationBtn.innerHTML = "📍 Use GPS";
+                locationBtn.disabled = false;
+                showMessage("Location detected successfully!", false);
+              })
+              .catch((err) => {
+                locationBtn.innerHTML = "📍 Use GPS";
+                locationBtn.disabled = false;
+                showMessage(`Location error: ${err}`, true);
+              });
+          },
+          (err) => {
+            locationBtn.innerHTML = "📍 Use GPS";
+            locationBtn.disabled = false;
+            showMessage(`Location error: ${err.message}`, true);
+          },
+          {
+            enableHighAccuracy: true,
+            timeout: 10000,
+          }
+        );
+      });
+
+      // Form submission
+      submitBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        const selectedType = document.querySelector(
+          'input[name="type"]:checked'
+        );
+
+        if (!title.value.trim()) {
+          showMessage("Please provide a title", true);
+          return;
+        }
+
+        if (!description.value.trim()) {
+          showMessage("Please provide a description", true);
+          return;
+        }
+
+        if (!imageUrl) {
+          showMessage("Please upload an image first", true);
+          return;
+        }
+
+        if (!locationInput.value.trim()) {
+          showMessage("Please provide a location", true);
+          return;
+        }
+
+        const post = {
+          title: title.value.trim(),
+          description: description.value.trim(),
+          type: selectedType.value,
+          location: locationInput.value.trim(),
+          lat: lat,
+          lng: lng,
+          image: imageUrl,
+        };
+
+        submitText.innerHTML = '<span class="loading"></span> Creating post...';
+        submitBtn.disabled = true;
+
+        fetch("php_actions/save_post.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(post),
+        })
+          .then((response) => response.json())
+          .then((result) => {
+            submitText.innerHTML = "✨ Create Post";
+            submitBtn.disabled = false;
+
+            if (result.status === "success") {
+              showMessage("Post created successfully! Redirecting...", false);
+              setTimeout(() => {
+                window.location.href = "post_view.php";
+              }, 2000);
+            } else {
+              showMessage(result.message, true);
+            }
+          })
+          .catch((err) => {
+            submitText.innerHTML = "✨ Create Post";
+            submitBtn.disabled = false;
+            showMessage(`Error: ${err}`, true);
+          });
+      });
+    </script>
+  </body>
+</html>
