@@ -58,6 +58,7 @@ $user_name = $_SESSION['user_name'];
             display: flex;
             align-items: center;
             gap: 1rem;
+            text-decoration: none;
         }
 
         .logo {
@@ -74,16 +75,17 @@ $user_name = $_SESSION['user_name'];
 
         .page-info {
             text-align: center;
+            flex: 1;
         }
 
-        .page-title {
+        .page-info .page-title {
             font-size: 1.8rem;
             font-weight: 700;
             color: #1e3c72;
             margin-bottom: 0.25rem;
         }
 
-        .page-subtitle {
+        .page-info .page-subtitle {
             font-size: 1rem;
             color: #6b7280;
             font-weight: 400;
@@ -112,6 +114,12 @@ $user_name = $_SESSION['user_name'];
             font-size: 1.1rem;
             cursor: pointer;
             border: none;
+            transition: all 0.3s ease;
+        }
+
+        .profile-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
 
         .dropdown-menu {
@@ -125,6 +133,7 @@ $user_name = $_SESSION['user_name'];
             min-width: 200px;
             z-index: 1000;
             display: none;
+            margin-top: 0.5rem;
         }
 
         .dropdown-item {
@@ -153,7 +162,7 @@ $user_name = $_SESSION['user_name'];
             margin-bottom: 3rem;
         }
 
-        .page-title {
+        .page-header .page-title {
             font-size: 2.5rem;
             font-weight: 700;
             color: white;
@@ -161,11 +170,13 @@ $user_name = $_SESSION['user_name'];
             text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .page-subtitle {
+        .page-header .page-subtitle {
             font-size: 1.1rem;
             color: rgba(255, 255, 255, 0.9);
             font-weight: 400;
         }
+
+        /* ... rest of your existing styles remain the same ... */
 
         /* Action Bar */
         .action-bar {
