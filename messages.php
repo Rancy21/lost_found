@@ -27,11 +27,17 @@ $user_name = $_SESSION['user_name'];
             <span class="logo">🔍</span>
             <h1 class="header-title">Lost & Found Messages</h1>
         </div>
-        <div class="user-info">
-            <div class="user-avatar">
-                <?php echo strtoupper(substr($user_name, 0, 1)); ?>
+        <div class="header-actions">
+            <a href="main.php" class="back-btn">
+                <span class="btn-icon">🏠</span>
+                Back to Home
+            </a>
+            <div class="user-info">
+                <div class="user-avatar">
+                    <?php echo strtoupper(substr($user_name, 0, 1)); ?>
+                </div>
+                <span><?php echo htmlspecialchars($user_name); ?></span>
             </div>
-            <span><?php echo htmlspecialchars($user_name); ?></span>
         </div>
     </header>
 

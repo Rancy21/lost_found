@@ -38,12 +38,41 @@ body {
   color: #1e3c72;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+.btn-icon {
+  font-size: 1rem;
+}
+
 .user-info {
   display: flex;
   align-items: center;
   gap: 1rem;
 }
-x .user-avatar {
+.user-avatar {
   width: 32px;
   height: 32px;
   background: #1e3c72;
@@ -471,97 +500,97 @@ x .user-avatar {
 }
 
 .post-info-details strong {
-    color: #374151;
-    font-weight: 600;
-    display: inline-block;
-    min-width: 80px;
+  color: #374151;
+  font-weight: 600;
+  display: inline-block;
+  min-width: 80px;
 }
 
 .post-info-details span {
-    color: #6b7280;
+  color: #6b7280;
 }
 
 .post-info-image {
-    max-width: 100%;
-    max-height: 200px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-top: 0.5rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease;
+  max-width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-top: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
 }
 
 .post-info-image:hover {
-    transform: scale(1.02);
+  transform: scale(1.02);
 }
 
 /* Post type indicator */
 .conversation-post-info[data-type="lost"]::before {
-    background: linear-gradient(90deg, #ef4444, #f97316);
+  background: linear-gradient(90deg, #ef4444, #f97316);
 }
 
 .conversation-post-info[data-type="found"]::before {
-    background: linear-gradient(90deg, #10b981, #059669);
+  background: linear-gradient(90deg, #10b981, #059669);
 }
 
 /* Contact button styles for main.php */
 .contact-btn {
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .contact-btn:hover {
-    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
 .own-post-label {
-    color: #6b7280;
-    font-size: 0.85rem;
-    font-style: italic;
-    padding: 0.5rem 1rem;
+  color: #6b7280;
+  font-size: 0.85rem;
+  font-style: italic;
+  padding: 0.5rem 1rem;
 }
 
 /* Notification styles */
 .notification {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 1rem 1.5rem;
-    border-radius: 8px;
-    color: white;
-    font-weight: 500;
-    z-index: 1000;
-    animation: slideInRight 0.3s ease;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  color: white;
+  font-weight: 500;
+  z-index: 1000;
+  animation: slideInRight 0.3s ease;
 }
 
 .notification.success {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
 }
 
 .notification.error {
-    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
 }
 
 @keyframes slideInRight {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 .conversation-post-info h3 {
