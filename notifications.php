@@ -111,6 +111,82 @@ $user_name = $_SESSION['user_name'];
             font-size: 1rem;
         }
 
+        /* Metrics Section */
+        .metrics-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .metric-card.unread {
+            border-color: #3b82f6;
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        }
+
+        .metric-card.approved {
+            border-color: #10b981;
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+        }
+
+        .metric-card.rejected {
+            border-color: #ef4444;
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+        }
+
+        .metric-card.recent {
+            border-color: #f59e0b;
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        }
+
+        .metric-icon {
+            font-size: 2rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.8);
+            flex-shrink: 0;
+        }
+
+        .metric-content {
+            flex: 1;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 0.25rem;
+            line-height: 1;
+        }
+
+        .metric-label {
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
         /* Filter Bar */
         .filter-bar {
             background: rgba(255, 255, 255, 0.95);
@@ -366,6 +442,28 @@ $user_name = $_SESSION['user_name'];
                 padding: 1rem;
             }
 
+            .metrics-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .metric-card {
+                padding: 1rem;
+                flex-direction: column;
+                text-align: center;
+                gap: 0.75rem;
+            }
+
+            .metric-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+
+            .metric-value {
+                font-size: 1.5rem;
+            }
+
             .filter-bar {
                 flex-direction: column;
                 align-items: stretch;
@@ -383,6 +481,12 @@ $user_name = $_SESSION['user_name'];
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .metrics-container {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -406,6 +510,45 @@ $user_name = $_SESSION['user_name'];
         <div class="notifications-header">
             <h2 class="notifications-title">Your Notifications</h2>
             <p class="notifications-subtitle">Stay updated with your post status and community activity</p>
+        </div>
+
+        <!-- Metrics Section -->
+        <div class="metrics-container">
+            <div class="metric-card">
+                <div class="metric-icon">📊</div>
+                <div class="metric-content">
+                    <div class="metric-value" id="total-count">-</div>
+                    <div class="metric-label">Total Notifications</div>
+                </div>
+            </div>
+            <div class="metric-card unread">
+                <div class="metric-icon">🔔</div>
+                <div class="metric-content">
+                    <div class="metric-value" id="unread-count">-</div>
+                    <div class="metric-label">Unread</div>
+                </div>
+            </div>
+            <!-- <div class="metric-card approved">
+                <div class="metric-icon">✅</div>
+                <div class="metric-content">
+                    <div class="metric-value" id="approved-count">-</div>
+                    <div class="metric-label">Approved</div>
+                </div>
+            </div> -->
+            <!-- <div class="metric-card rejected">
+                <div class="metric-icon">❌</div>
+                <div class="metric-content">
+                    <div class="metric-value" id="rejected-count">-</div>
+                    <div class="metric-label">Rejected</div>
+                </div>
+            </div> -->
+            <div class="metric-card recent">
+                <div class="metric-icon">⏰</div>
+                <div class="metric-content">
+                    <div class="metric-value" id="recent-count">-</div>
+                    <div class="metric-label">Last 24 Hours</div>
+                </div>
+            </div>
         </div>
 
         <!-- Filter Bar -->
@@ -471,6 +614,7 @@ $user_name = $_SESSION['user_name'];
 
             init() {
                 this.setupEventListeners();
+                this.loadMetrics();
                 this.loadNotifications();
             }
 
@@ -494,6 +638,33 @@ $user_name = $_SESSION['user_name'];
                 });
             }
 
+            async loadMetrics() {
+                try {
+                    const response = await fetch('php_actions/notifications/get_metrics.php');
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    
+                    if (data.status === 'success') {
+                        this.displayMetrics(data.metrics);
+                    } else {
+                        console.error('Failed to load metrics:', data.message);
+                    }
+                } catch (error) {
+                    console.error('Error loading metrics:', error);
+                }
+            }
+
+            displayMetrics(metrics) {
+                document.getElementById('total-count').textContent = metrics.total || 0;
+                document.getElementById('unread-count').textContent = metrics.unread || 0;
+                // document.getElementById('approved-count').textContent = metrics.approved || 0;
+                // document.getElementById('rejected-count').textContent = metrics.rejected || 0;
+                document.getElementById('recent-count').textContent = metrics.recent || 0;
+            }
             
             async loadNotifications() {
                 this.showLoading();
