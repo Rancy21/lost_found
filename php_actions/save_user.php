@@ -62,8 +62,8 @@ if (!$stmt) {
     ]);
 }
 
-
-$stmt->bind_param('ssss', $email, $name, $pswd, $role);
+// Use the hashed password instead of plain text
+$stmt->bind_param('ssss', $email, $name, $passwordHash, $role);
 
 if ($stmt->execute()) {
     $stmt->close();

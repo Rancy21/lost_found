@@ -61,8 +61,8 @@ if ($result->num_rows > 0) {
         ]);
     }
     
-    // Verify password (In production, use password_verify() with hashed passwords)
-    if ($password === $user['password']) {
+    // Verify password using secure password verification
+    if (password_verify($password, $user['password'])) {
         // Create session
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['user_email'] = $user['email'];
