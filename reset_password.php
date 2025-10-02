@@ -1,14 +1,20 @@
 <?php
-$error_message = $_GET['error'];
-$success_message = $_GET['success'];
-?>
+$error_message = $_GET['error'] ?? '';
+$success_message = $_GET['success'] ?? '';
+$token = $_GET['token'] ?? '';
 
+// Validate token exists
+if (empty($token)) {
+    header('Location: login.php?error=Invalid or missing reset token');
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In - Lost & Found</title>
+    <title>Reset Password - Lost & Found</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -17,8 +23,8 @@ $success_message = $_GET['success'];
 <body>
     <div class="login-container">
         <div class="login-header">
-            <h1>Welcome Back</h1>
-            <p>Sign in to help reunite lost items with their owners</p>
+            <h1>🔑 Reset Password</h1>
+            <p>Enter your new password below</p>
         </div>
 
         <?php if ($success_message): ?>
@@ -33,25 +39,24 @@ $success_message = $_GET['success'];
             </div>
         <?php endif; ?>
         
-        <form method="POST" action="php_actions/login_user.php">
+        <form method="POST" action="php_actions/reset_password.php">
+            <input type="hidden" name="token" value="<?php echo htmlspecialchars($token); ?>">
+            
             <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($_GET['email'] ?? ''); ?>" placeholder="Enter your email" required>
+                <label for="password">New Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter new password" required minlength="6">
             </div>
             
             <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Enter your password" required>
-                <div style="text-align: right; margin-top: 0.5rem;">
-                    <a href="forgot_password.php" style="color: #667eea; text-decoration: none; font-size: 0.9rem;">Forgot Password?</a>
-                </div>
+                <label for="confirm_password">Confirm New Password</label>
+                <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm new password" required minlength="6">
             </div>
             
-            <button type="submit" class="btn">Sign In</button>
+            <button type="submit" class="btn">Reset Password</button>
         </form>
         
         <div class="switch-form">
-            <p>New to Lost & Found? <a href="signup.php">Create Account</a></p>
+            <p>Remember your password? <a href="login.php">Sign In</a></p>
         </div>
     </div>
 </body>

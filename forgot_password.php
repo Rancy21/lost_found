@@ -1,14 +1,13 @@
 <?php
-$error_message = $_GET['error'];
-$success_message = $_GET['success'];
+$error_message = $_GET['error'] ?? '';
+$success_message = $_GET['success'] ?? '';
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In - Lost & Found</title>
+    <title>Forgot Password - Lost & Found</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -17,8 +16,8 @@ $success_message = $_GET['success'];
 <body>
     <div class="login-container">
         <div class="login-header">
-            <h1>Welcome Back</h1>
-            <p>Sign in to help reunite lost items with their owners</p>
+            <h1>🔐 Forgot Password</h1>
+            <p>Enter your email address and we'll send you a link to reset your password</p>
         </div>
 
         <?php if ($success_message): ?>
@@ -33,25 +32,17 @@ $success_message = $_GET['success'];
             </div>
         <?php endif; ?>
         
-        <form method="POST" action="php_actions/login_user.php">
+        <form method="POST" action="php_actions/request_password_reset.php">
             <div class="form-group">
                 <label for="email">Email Address</label>
-                <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($_GET['email'] ?? ''); ?>" placeholder="Enter your email" required>
+                <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($_GET['email'] ?? ''); ?>" placeholder="Enter your registered email" required>
             </div>
             
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Enter your password" required>
-                <div style="text-align: right; margin-top: 0.5rem;">
-                    <a href="forgot_password.php" style="color: #667eea; text-decoration: none; font-size: 0.9rem;">Forgot Password?</a>
-                </div>
-            </div>
-            
-            <button type="submit" class="btn">Sign In</button>
+            <button type="submit" class="btn">Send Reset Link</button>
         </form>
         
         <div class="switch-form">
-            <p>New to Lost & Found? <a href="signup.php">Create Account</a></p>
+            <p>Remember your password? <a href="login.php">Sign In</a></p>
         </div>
     </div>
 </body>
