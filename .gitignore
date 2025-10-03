@@ -1,0 +1,37 @@
+# Sensitive configuration files
+config/email_config.php
+
+# Environment files
+.env
+.env.local
+
+# Uploads directory (user-generated content)
+uploads/*
+!uploads/.gitkeep
+
+# Vendor directory (Composer dependencies)
+vendor/
+
+# Node modules
+node_modules/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Composer
+composer.phar
+
+# Temporary files
+*.tmp
+*.cache
