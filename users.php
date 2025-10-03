@@ -218,6 +218,130 @@ if($user_role !== 'admin' ){
 .main-content{
     max-width: 900px;
 }
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 2rem;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    animation: slideDown 0.3s ease;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.close {
+    color: #9ca3af;
+    font-size: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    background: none;
+    transition: color 0.3s ease;
+}
+
+.close:hover {
+    color: #374151;
+}
+
+.modal-body {
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-label {
+    display: block;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+    font-family: 'Inter', sans-serif;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #3b82f6;
+}
+
+.modal-footer {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+}
+
+.btn-cancel {
+    background: #e5e7eb;
+    color: #374151;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-cancel:hover {
+    background: #d1d5db;
+}
+
+.btn-confirm {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-confirm:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
     </style>
 </head>
 <body>
@@ -299,6 +423,36 @@ if($user_role !== 'admin' ){
             <div class="empty-icon">👥</div>
             <h3 class="empty-title">No Users Found</h3>
             <p class="empty-description">There are no registered users in the system.</p>
+        </div>
+    </div>
+
+    <!-- Ban Reason Modal -->
+    <div id="banModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">🚫 Ban User</h2>
+                <button class="close" onclick="closeBanModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">User Email:</label>
+                    <p id="banUserEmail" style="color: #3b82f6; font-weight: 600;"></p>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="banReason">Reason for Ban: *</label>
+                    <textarea 
+                        id="banReason" 
+                        class="form-control" 
+                        rows="4" 
+                        placeholder="Please provide a reason for banning this user..."
+                        required
+                    ></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeBanModal()">Cancel</button>
+                <button class="btn-confirm" onclick="confirmBan()">Ban User</button>
+            </div>
         </div>
     </div>
 
@@ -460,32 +614,50 @@ if($user_role !== 'admin' ){
     }
 }
 
-    async function banUser(email) {
-    if (!confirm(`Are you sure you want to ban ${email}? They will not be able to log in.`)) {
-        return;
+    let currentBanEmail = '';
+
+    function banUser(email) {
+        currentBanEmail = email;
+        document.getElementById('banUserEmail').textContent = email;
+        document.getElementById('banReason').value = '';
+        document.getElementById('banModal').style.display = 'block';
     }
 
-    try {
-        const response = await fetch('php_actions/admin_actions/ban_user.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: `user_email=${encodeURIComponent(email)}`
-        });
+    function closeBanModal() {
+        document.getElementById('banModal').style.display = 'none';
+    }
 
-        const data = await response.json();
+    async function confirmBan() {
+        const reason = document.getElementById('banReason').value.trim();
         
-        if (data.status === 'success') {
-            showMessage(data.message, false);
-            loadUsers(); // Refresh the user list
-        } else {
-            showMessage('Error banning user: ' + data.message, true);
+        if (!reason) {
+            alert('Please provide a reason for banning this user.');
+            return;
         }
-    } catch (error) {
-        showMessage('Network error: ' + error.message, true);
+closeBanModal();
+        try {
+            const response = await fetch('php_actions/admin_actions/ban_user.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `user_email=${encodeURIComponent(currentBanEmail)}&reason=${encodeURIComponent(reason)}`
+            });
+
+            const data = await response.json();
+            
+            if (data.status === 'success') {
+                showMessage(data.message, false);
+                loadUsers();
+            } else {
+                showMessage('Error banning user: ' + data.message, true);
+            }
+        } catch (error) {
+            showMessage('Network error: ' + error.message, true);
+        }
+        currentBanEmail = '';
+        
     }
-}
 
 async function unbanUser(email) {
     if (!confirm(`Are you sure you want to unban ${email}?`)) {
