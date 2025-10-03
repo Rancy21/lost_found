@@ -6,6 +6,7 @@ A comprehensive web-based platform designed to help communities reunite lost ite
 
 ### 🏠 **User Features**
 - **Account Management**: Secure user registration and login with encrypted passwords
+- **Password Recovery**: Forgot password functionality with email-based reset links
 - **Post Creation**: Create detailed posts for lost or found items with images and location data
 - **Search & Filter**: Advanced search functionality with type and status filters
 - **Real-time Messaging**: Direct communication between users about specific items
@@ -17,6 +18,10 @@ A comprehensive web-based platform designed to help communities reunite lost ite
 - **Admin Dashboard**: Comprehensive overview with statistics and metrics
 - **Post Moderation**: Review and moderate pending posts with approval/rejection workflow
 - **User Management**: Manage user accounts, roles, and status (active/banned)
+  - Ban users with reason modal and automated email notification
+  - Unban users with email confirmation
+  - Promote/demote users with role change notifications
+- **Email Notification System**: Automated email notifications for all user management actions
 - **Notification System**: Send automated notifications to users about post status changes
 - **Advanced Analytics**: Track platform usage, post resolution rates, and user activity
 
@@ -27,16 +32,22 @@ A comprehensive web-based platform designed to help communities reunite lost ite
 - **Contact Integration**: Easy contact buttons on posts for direct communication
 
 ### 🔔 **Notification System**
-- **Real-time Notifications**: Live notification bell with dropdown preview
+- **In-App Notifications**: Live notification bell with dropdown preview
 - **Comprehensive Dashboard**: Full notifications page with filtering and pagination
 - **Metrics Display**: Visual metrics showing notification statistics
 - **Email-style Organization**: Inbox/sent message organization
+- **Email Notifications**: SMTP-based email system with HTML templates
+  - Password reset emails with secure time-limited tokens
+  - Account ban notifications with detailed reasons
+  - Account unban confirmations with login links
+  - Role change notifications (admin promotion/demotion)
 
 ## 🛠 Technology Stack
 
 - **Backend**: PHP 8.0+ with MySQL/MariaDB
 - **Frontend**: Vanilla JavaScript, HTML5, CSS3
 - **Authentication**: Secure password hashing with PHP's password_hash()
+- **Email System**: PHPMailer with SMTP support (Gmail, etc.)
 - **Database**: MySQL with prepared statements for security
 - **File Uploads**: Image upload support with validation
 - **Responsive Design**: CSS Grid and Flexbox for modern layouts
@@ -46,6 +57,8 @@ A comprehensive web-based platform designed to help communities reunite lost ite
 - Web server (Apache/Nginx) with PHP 8.0+
 - MySQL 8.0+ or MariaDB 10.3+
 - PHP extensions: mysqli, gd, fileinfo
+- Composer (for PHPMailer installation)
+- SMTP server access (e.g., Gmail, SendGrid) for email features
 - Modern web browser
 
 ## 🚀 Installation
@@ -56,12 +69,17 @@ A comprehensive web-based platform designed to help communities reunite lost ite
    cd lost_found
    ```
 
-2. **Set up the database**
+2. **Install dependencies**
+   ```bash
+   composer install
+   ```
+
+3. **Set up the database**
    - Create a MySQL database for the application
-   - Import the database schema (create tables for users, posts, messages, notifications)
+   - Import the database schema (create tables for users, posts, messages, notifications, password_resets)
    - Update database configuration in `config/config.php`
 
-3. **Configure the application**
+4. **Configure the application**
    ```php
    // config/config.php
    $servername = "localhost";
@@ -70,13 +88,26 @@ A comprehensive web-based platform designed to help communities reunite lost ite
    $dbname = "lost_found_db";
    ```
 
-4. **Set up file permissions**
+5. **Configure email settings**
+   ```php
+   // includes/email_helper.php
+   define('SMTP_ENABLED', true);
+   define('SMTP_HOST', 'smtp.gmail.com');
+   define('SMTP_PORT', 587);
+   define('SMTP_USERNAME', 'your_email@gmail.com');
+   define('SMTP_PASSWORD', 'your_app_password');
+   define('SMTP_ENCRYPTION', 'tls');
+   define('FROM_EMAIL', 'noreply@lostandfound.com');
+   define('FROM_NAME', 'Lost & Found');
+   ```
+
+6. **Set up file permissions**
    ```bash
    chmod 755 uploads/
    chmod 644 *.php
    ```
 
-5. **Create admin account**
+7. **Create admin account**
    - Register a regular user account
    - Manually update the user's role to 'admin' in the database
    - Or use the provided SQL commands
@@ -84,10 +115,11 @@ A comprehensive web-based platform designed to help communities reunite lost ite
 ## 📊 Database Schema
 
 ### Core Tables
-- **users**: User accounts with roles and status
+- **users**: User accounts with roles and status (admin/user, active/banned)
 - **posts**: Lost and found item posts with images and locations
 - **messages**: Internal messaging system
 - **notifications**: User notification system
+- **password_resets**: Secure password reset tokens with expiration
 
 ### Key Features
 - Prepared statements for SQL injection protection
@@ -114,11 +146,13 @@ A comprehensive web-based platform designed to help communities reunite lost ite
 ## 🔐 Security Features
 
 - **Password Security**: Bcrypt hashing for all passwords
+- **Password Reset Security**: Time-limited tokens (1 hour expiration) with secure random generation
 - **SQL Injection Protection**: Prepared statements throughout
 - **XSS Prevention**: Input sanitization and output escaping
 - **Session Management**: Secure session handling
-- **Role-Based Access**: Admin/user role separation
+- **Role-Based Access**: Admin/user role separation with middleware protection
 - **File Upload Security**: Image validation and secure storage
+- **Email Privacy**: Password reset doesn't reveal if email exists (security best practice)
 
 ## 📱 Responsive Design
 
@@ -129,13 +163,16 @@ The platform is fully responsive and optimized for:
 
 ## 🚧 Future Enhancements
 
-- [ ] Email notification integration
+- [x] Email notification integration
+- [x] Password reset functionality
+- [x] User ban/unban system with email notifications
 - [ ] Advanced search with AI-powered matching
 - [ ] Mobile app development
 - [ ] Integration with social media platforms
 - [ ] Advanced analytics dashboard
 - [ ] Multi-language support
 - [ ] API for third-party integrations
+- [ ] Two-factor authentication (2FA)
 
 ## 🤝 Contributing
 
