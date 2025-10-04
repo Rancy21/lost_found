@@ -130,8 +130,3 @@ function sendTestEmail($to) {
     
     return sendEmail($to, $subject, $message);
 }
-<<<<<<< HEAD
-?>
-=======
-?>
->>>>>>> 25c85ec (Updated email helper with hidden credentials)
