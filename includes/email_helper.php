@@ -3,18 +3,18 @@
  * Email Helper Functions
  * 
  * This file contains functions for sending emails.
- * Configure your email settings below.
+ * Email credentials are stored in config/email_config.php (not version controlled)
  */
 
-// Email Configuration
-define('SMTP_ENABLED', true); // Set to true to use SMTP, false to use PHP mail()
-define('SMTP_HOST', 'smtp.gmail.com'); // Your SMTP host
-define('SMTP_PORT', 587); // SMTP port (587 for TLS, 465 for SSL)
-define('SMTP_USERNAME', 'lostfound21003@gmail.com'); // Your email
-define('SMTP_PASSWORD', 'lbpg xjdl rolr ophs'); // Your email password or app password
-define('SMTP_ENCRYPTION', 'tls'); // 'tls' or 'ssl'
-define('FROM_EMAIL', 'noreply@lostandfound.com'); // From email address
-define('FROM_NAME', 'Lost & Found'); // From name
+// Load email configuration from secure config file
+$email_config_path = __DIR__ . '/../config/email_config.php';
+
+if (!file_exists($email_config_path)) {
+    error_log('Email configuration file not found. Please copy config/email_config.example.php to config/email_config.php and configure your SMTP settings.');
+    die('Email configuration missing. Please contact the administrator.');
+}
+
+require_once $email_config_path;
 
 /**
  * Send email using PHP mail() function
@@ -130,4 +130,8 @@ function sendTestEmail($to) {
     
     return sendEmail($to, $subject, $message);
 }
+<<<<<<< HEAD
 ?>
+=======
+?>
+>>>>>>> 25c85ec (Updated email helper with hidden credentials)
