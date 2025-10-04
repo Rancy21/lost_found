@@ -35,3 +35,4 @@ composer.phar
 # Temporary files
 *.tmp
 *.cache
+test_email.php
