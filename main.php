@@ -809,7 +809,7 @@ $user_name = $_SESSION['user_name'];
             <a href="post_view.php" class="dropdown-item">📝 My Posts</a>
             <a href="messages.php" class="dropdown-item">💬 Messages</a>
             <a href="notifications.php" class="dropdown-item">🔔 Notifications</a>
-            <a href="#" class="dropdown-item">⚙️ Settings</a>
+            <a href="profile.php" class="dropdown-item">👤 Profile</a>
             <a href="php_actions/logout.php" class="dropdown-item">🚪 Logout</a>
           </div>
         </div>
