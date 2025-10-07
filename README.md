@@ -7,6 +7,7 @@ A comprehensive web-based platform designed to help communities reunite lost ite
 ### 🏠 **User Features**
 - **Account Management**: Secure user registration and login with encrypted passwords
 - **Password Recovery**: Forgot password functionality with email-based reset links
+- **Profile Management**: View your profile and update full name and password (email cannot be changed)
 - **Post Creation**: Create detailed posts for lost or found items with images and location data
 - **Search & Filter**: Advanced search functionality with type and status filters
 - **Real-time Messaging**: Direct communication between users about specific items
@@ -135,6 +136,7 @@ A comprehensive web-based platform designed to help communities reunite lost ite
 3. **Post Items**: Create posts for items you've lost or found
 4. **Contact Others**: Use the messaging system to communicate about items
 5. **Track Status**: Monitor your post status and receive notifications
+6. **Manage Profile**: Update your name and password from your Profile page (email is read-only)
 
 ### For Administrators
 1. **Access Admin Panel**: Login and navigate to the admin dashboard
@@ -151,6 +153,7 @@ A comprehensive web-based platform designed to help communities reunite lost ite
 - **XSS Prevention**: Input sanitization and output escaping
 - **Session Management**: Secure session handling
 - **Role-Based Access**: Admin/user role separation with middleware protection
+- **Immutable Email**: Users cannot change their registered email address
 - **File Upload Security**: Image validation and secure storage
 - **Email Privacy**: Password reset doesn't reveal if email exists (security best practice)
 
