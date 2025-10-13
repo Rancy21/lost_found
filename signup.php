@@ -55,5 +55,9 @@ $prefill_fullname = $_GET['fullname'] ?? '';
             <p>Already have an account? <a href="login.php">Sign In</a></p>
         </div>
     </div>
+    
+    <footer style="margin-top: 2rem; padding: 1.5rem 0; text-align: center; width: 100%;">
+        <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.85rem; margin: 0;">© <?php echo date('Y'); ?> Lost & Found. All rights reserved.</p>
+    </footer>
 </body>
-</html>1
+</html>

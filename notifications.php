@@ -1031,5 +1031,85 @@ $user_name = $_SESSION['user_name'];
             notificationsPage = new NotificationsPage();
         });
     </script>
+    
+   <footer style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); padding: 3rem 0 1.5rem; margin-top: 3rem; box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 2rem;">
+        <!-- Quick Links Section -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+            <!-- Navigation Column -->
+            <div>
+                <h3 style="color: #1e3c72; font-size: 1rem; font-weight: 600; margin-bottom: 1rem;">Navigation</h3>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    <a href="main.php" style="color: #667eea; text-decoration: none; font-size: 0.9rem; transition: all 0.3s; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>🏠</span> Home
+                    </a>
+                    <a href="post_view.php" style="color: #667eea; text-decoration: none; font-size: 0.9rem; transition: all 0.3s; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>📝</span> My Posts
+                    </a>
+                    <a href="post.html" style="color: #667eea; text-decoration: none; font-size: 0.9rem; transition: all 0.3s; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>➕</span> Create Post
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Communication Column -->
+            <div>
+                <h3 style="color: #1e3c72; font-size: 1rem; font-weight: 600; margin-bottom: 1rem;">Communication</h3>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    <a href="messages.php" style="color: #667eea; text-decoration: none; font-size: 0.9rem; transition: all 0.3s; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>💬</span> Messages
+                    </a>
+                    <a href="notifications.php" style="color: #667eea; text-decoration: none; font-size: 0.9rem; transition: all 0.3s; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>🔔</span> Notifications
+                    </a>
+                    <a href="profile.php" style="color: #667eea; text-decoration: none; font-size: 0.9rem; transition: all 0.3s; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>👤</span> Profile
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Information Column -->
+            <div>
+                <h3 style="color: #1e3c72; font-size: 1rem; font-weight: 600; margin-bottom: 1rem;">Information</h3>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    <a href="#" style="color: #667eea; text-decoration: none; font-size: 0.9rem; transition: all 0.3s; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>ℹ️</span> About
+                    </a>
+                    <a href="#" style="color: #667eea; text-decoration: none; font-size: 0.9rem; transition: all 0.3s; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>🔒</span> Privacy Policy
+                    </a>
+                    <a href="#" style="color: #667eea; text-decoration: none; font-size: 0.9rem; transition: all 0.3s; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>📋</span> Terms of Service
+                    </a>
+                    <a href="#" style="color: #667eea; text-decoration: none; font-size: 0.9rem; transition: all 0.3s; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>📧</span> Contact
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Divider -->
+        <div style="border-top: 1px solid #e5e7eb; margin: 2rem 0 1.5rem;"></div>
+        
+        <!-- Bottom Section -->
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <p style="color: #6b7280; font-size: 0.85rem; margin: 0;">
+                © <?php echo date('Y'); ?> Lost & Found. All rights reserved.
+            </p>
+            <!-- <div style="display: flex; gap: 1rem;">
+                <a href="#" style="color: #9ca3af; font-size: 1.2rem; transition: color 0.3s;" title="Facebook">📘</a>
+                <a href="#" style="color: #9ca3af; font-size: 1.2rem; transition: color 0.3s;" title="Twitter">🐦</a>
+                <a href="#" style="color: #9ca3af; font-size: 1.2rem; transition: color 0.3s;" title="Instagram">📷</a>
+            </div> -->
+        </div>
+    </div>
+</footer>
+
+<style>
+footer a:hover {
+    color: #764ba2 !important;
+    transform: translateX(3px);
+}
+</style>
 </body>
 </html>
