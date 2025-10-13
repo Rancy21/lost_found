@@ -835,7 +835,30 @@ $user_name = $_SESSION['user_name'];
         <button class="filter-tab active" data-filter="all">All Items</button>
         <button class="filter-tab" data-filter="lost">Lost Items</button>
         <button class="filter-tab" data-filter="found">Found Items</button>
-        <button class="filter-tab" data-filter="recent">Recent</button>
+        <!-- <button class="filter-tab" data-filter="recent">Recent</button> -->
+      </div>
+      <!-- Advanced Filters -->
+      <div class="advanced-filters" style="background: rgba(255,255,255,0.95); padding: 1.5rem; border-radius: 20px; margin-bottom: 2rem; box-shadow: 0 8px 32px rgba(0,0,0,0.1);">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <!-- Date Filter -->
+          <div>
+            <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #374151;">📅 Date Posted</label>
+            <select id="dateFilter" style="width: 100%; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 12px; font-size: 0.9rem;">
+              <option value="all">All Time</option>
+              <option value="today">Today</option>
+              <option value="week">Last 7 Days</option>
+              <option value="month">Last 30 Days</option>
+            </select>
+          </div>
+          
+          <!-- Location Filter -->
+          <div>
+            <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #374151;">📍 Location</label>
+            <select id="locationFilter" style="width: 100%; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 12px; font-size: 0.9rem;">
+              <option value="all">All Locations</option>
+            </select>
+          </div>
+        </div>
       </div>
 
       <!-- Loading State -->
@@ -863,8 +886,41 @@ $user_name = $_SESSION['user_name'];
     <script>
       let allPosts = [];
       let currentFilter = "all";
+      let currentDateFilter = "all";
+      let currentLocationFilter = "all";
       let currentSearch = "";
       let currentUser = <?php echo json_encode($_SESSION['user_id']); ?>;
+
+      document.getElementById('dateFilter').addEventListener('change', (e) => {
+        currentDateFilter = e.target.value;
+        loadPosts();
+      });
+
+      document.getElementById('locationFilter').addEventListener('change', (e) => {
+        currentLocationFilter = e.target.value;
+        loadPosts();
+      });
+
+      // Load unique locations on page load
+      loadLocations();
+
+      async function loadLocations() {
+        try {
+          const response = await fetch('php_actions/get_locations.php');
+          const data = await response.json();
+          if (data.status === 'success') {
+            const select = document.getElementById('locationFilter');
+            data.locations.forEach(loc => {
+              const option = document.createElement('option');
+              option.value = loc;
+              option.textContent = loc;
+              select.appendChild(option);
+            });
+          }
+        } catch (error) {
+          console.error('Error loading locations:', error);
+        }
+      }
     
       // Add contact functionality
       function contactUser(postId, postOwnerId, postTitle) {
@@ -938,13 +994,18 @@ $user_name = $_SESSION['user_name'];
           if (currentSearch.trim() !== "") {
             // Use search endpoint
             const params = new URLSearchParams({
-              search: currentSearch,
+              filter: currentFilter,
+              date: currentDateFilter,
+              location: currentLocationFilter,
+              search: currentSearch
             });
-            url = `php_actions/search_posts.php?${params}`;
-          } else if (currentFilter !== "all") {
+            url = `php_actions/filter_posts.php?${params}`;
+          } else if (currentFilter !== "all" || currentDateFilter !== "all" || currentLocationFilter !== "all") {
             // Use filter endpoint
             const params = new URLSearchParams({
               filter: currentFilter,
+              date: currentDateFilter,
+              location: currentLocationFilter
             });
             url = `php_actions/filter_posts.php?${params}`;
           } else {
@@ -1150,5 +1211,85 @@ $user_name = $_SESSION['user_name'];
         }, 10000); // Show error longer for debugging
       }
     </script>
+    
+   <footer style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); padding: 3rem 0 1.5rem; margin-top: 3rem; box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 2rem;">
+        <!-- Quick Links Section -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+            <!-- Navigation Column -->
+            <div>
+                <h3 style="color: #1e3c72; font-size: 1rem; font-weight: 600; margin-bottom: 1rem;">Navigation</h3>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    <a href="main.php" style="color: #667eea; text-decoration: none; font-size: 0.9rem; transition: all 0.3s; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>🏠</span> Home
+                    </a>
+                    <a href="post_view.php" style="color: #667eea; text-decoration: none; font-size: 0.9rem; transition: all 0.3s; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>📝</span> My Posts
+                    </a>
+                    <a href="post.html" style="color: #667eea; text-decoration: none; font-size: 0.9rem; transition: all 0.3s; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>➕</span> Create Post
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Communication Column -->
+            <div>
+                <h3 style="color: #1e3c72; font-size: 1rem; font-weight: 600; margin-bottom: 1rem;">Communication</h3>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    <a href="messages.php" style="color: #667eea; text-decoration: none; font-size: 0.9rem; transition: all 0.3s; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>💬</span> Messages
+                    </a>
+                    <a href="notifications.php" style="color: #667eea; text-decoration: none; font-size: 0.9rem; transition: all 0.3s; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>🔔</span> Notifications
+                    </a>
+                    <a href="profile.php" style="color: #667eea; text-decoration: none; font-size: 0.9rem; transition: all 0.3s; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>👤</span> Profile
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Information Column -->
+            <div>
+                <h3 style="color: #1e3c72; font-size: 1rem; font-weight: 600; margin-bottom: 1rem;">Information</h3>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    <a href="#" style="color: #667eea; text-decoration: none; font-size: 0.9rem; transition: all 0.3s; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>ℹ️</span> About
+                    </a>
+                    <a href="#" style="color: #667eea; text-decoration: none; font-size: 0.9rem; transition: all 0.3s; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>🔒</span> Privacy Policy
+                    </a>
+                    <a href="#" style="color: #667eea; text-decoration: none; font-size: 0.9rem; transition: all 0.3s; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>📋</span> Terms of Service
+                    </a>
+                    <a href="#" style="color: #667eea; text-decoration: none; font-size: 0.9rem; transition: all 0.3s; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>📧</span> Contact
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Divider -->
+        <div style="border-top: 1px solid #e5e7eb; margin: 2rem 0 1.5rem;"></div>
+        
+        <!-- Bottom Section -->
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <p style="color: #6b7280; font-size: 0.85rem; margin: 0;">
+                © <?php echo date('Y'); ?> Lost & Found. All rights reserved.
+            </p>
+            <!-- <div style="display: flex; gap: 1rem;">
+                <a href="#" style="color: #9ca3af; font-size: 1.2rem; transition: color 0.3s;" title="Facebook">📘</a>
+                <a href="#" style="color: #9ca3af; font-size: 1.2rem; transition: color 0.3s;" title="Twitter">🐦</a>
+                <a href="#" style="color: #9ca3af; font-size: 1.2rem; transition: color 0.3s;" title="Instagram">📷</a>
+            </div> -->
+        </div>
+    </div>
+</footer>
+
+<style>
+footer a:hover {
+    color: #764ba2 !important;
+    transform: translateX(3px);
+}
+</style>
   </body>
 </html>
