@@ -14,29 +14,43 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
 $user_id = $_SESSION['user_id'];
 
 $filter = $_GET['filter'] ?? 'all';
+$dateFilter = $_GET['date'] ?? 'all';
+$locationFilter = $_GET['location'] ?? 'all';
 
 try {
-    $whereClause = "";
-    $params = [];
-    $types = "";
-
+    $whereClause = "WHERE u.id != ? AND p.status = 'active'";
+    $params = [$user_id];
+    $types = "i";
     // Add filter conditions
+    // Type filter
     if ($filter === 'lost') {
-        $whereClause = "WHERE p.type = 'lost' and u.id != ? and p.status = 'active'";
+        $whereClause .= " AND p.type = 'lost'";
     } elseif ($filter === 'found') {
-        $whereClause = "WHERE p.type = 'found' and u.id != ? and p.status = 'active'";
-    } elseif ($filter === 'recent') {
-        $whereClause = "WHERE p.date_posted >= DATE_SUB(NOW(), INTERVAL 7 DAY) and u.id != ? and p.status = 'active'";
+        $whereClause .= " AND p.type = 'found'";
     }
 
-    $sql = "SELECT p.post_id as post_id, p.date_posted as date_posted,p.description as description, p.image_url as image_url, p.location_name as location_name, p.status as status, p.type as type, u.id as user_id, u.full_name as full_name
+    if ($dateFilter === 'today') {
+        $whereClause .= " AND DATE(p.date_posted) = CURDATE()";
+    } elseif ($dateFilter === 'week') {
+        $whereClause .= " AND p.date_posted >= DATE_SUB(NOW(), INTERVAL 7 DAY)";
+    } elseif ($dateFilter === 'month') {
+        $whereClause .= " AND p.date_posted >= DATE_SUB(NOW(), INTERVAL 30 DAY)";
+    }
+
+    // Location filter
+    if ($locationFilter !== 'all') {
+        $whereClause .= " AND p.location_name = ?";
+        $params[] = $locationFilter;
+        $types .= "s";
+    }
+
+
+    $sql = "SELECT p.post_id as post_id, p.title as title, p.date_posted as date_posted,p.description as description, p.image_url as image_url, p.location_name as location_name, p.status as status, p.type as type, u.id as user_id, u.full_name as full_name
                             from posts p join users u on p.user_id = u.id
             $whereClause 
             ORDER BY p.date_posted DESC";
 
     $stmt = $conn->prepare($sql);
-
-    $stmt -> bind_param("i", $user_id);
 
     if (!$stmt) {
         throw new Exception("Prepare failed: " . $conn->error);
@@ -56,6 +70,7 @@ try {
     while ($row = $result->fetch_assoc()) {
         $posts[] = [
             'id' => $row['post_id'],
+            'title' => $row['title'],
             'description' => $row['description'],
             'type' => $row['type'],
             'location_name' => $row['location_name'],
